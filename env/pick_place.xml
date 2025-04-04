@@ -1,0 +1,16 @@
+<mujoco model="basic_world">
+    <size njmax="1000" nconmax="1000"/>
+    <include file="../../../../simhive/scene_sim/topfloor_scene.xml"/>
+    <compiler angle="radian" inertiafromgeom="true"/>
+
+    <default>
+        <geom rgba="0.8 0.8 0.8 1" contype="1" conaffinity="1" friction="0.8 0.1 0.1"/>
+    </default>
+
+    <worldbody>
+
+        <camera name="main_camera" pos="0 -3 2" euler="0.4 0 0"/>
+    </worldbody>
+
+    <option timestep="0.002" gravity="0 0 -9.81" iterations="50" integrator="RK4"/>
+</mujoco>
