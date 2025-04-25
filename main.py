@@ -51,8 +51,12 @@ def main():
         angular_list = []
         rpy_list = []
         
+        iteration = 0
+                
         try:
             while viewer.is_running():
+                print(iteration)
+                iteration += 1
                 t = time.time() - start
                 
                 # ctrl = trot_gait(t)
@@ -73,7 +77,7 @@ def main():
                 rpy = R.from_quat([quat[1], quat[2], quat[3], quat[0]]).as_euler('zyx', degrees=True)
                 
                 print(data.qpos[7:])
-                print(data.qvel[7:])
+                # print(data.qvel[7:])
                 
                 # pos_list.append(robot_pos.copy())
                 # linear_list.append(linear_vel.copy())

@@ -4,8 +4,9 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 
 - Import dog to MuJuCo - Done
 - Create custom gym environment - Not Done
-    - determine homing position
-    - determine observation space
+    - reset function
+    - reward function
+    - observation action
 - Train with stable baseline - Not Done
 
 ### Joints
@@ -25,21 +26,49 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 | hr_hy (q11) | (-0.898845, 2.29511) |
 | hr_kn (q12) | (-2.7929, -0.248282) |
 
+### Initial Joint Positions
+
+| Joint        | Position    |
+|--------------|-------------|
+| fl_hx (q1)   | 0.002915    |
+| fl_hy (q2)   | -0.025384   |
+| fl_kn (q3)   | -0.271586   |
+| fr_hx (q4)   | -0.002868   |
+| fr_hy (q5)   | -0.025559   |
+| fr_kn (q6)   | -0.272974   |
+| hl_hx (q7)   | 0.007593    |
+| hl_hy (q8)   | -0.048279   |
+| hl_kn (q9)   | -0.283963   |
+| hr_hx (q10)  | -0.007583   |
+| hr_hy (q11)  | -0.048371   |
+| hr_kn (q12)  | -0.285347   |
+
 ### Action Space
-Box
+
+| Action | Range (Min Δ, Max Δ)          |
+|--------|-------------------------------|
+| a1     | (-0.788313, 0.782483)         |
+| a2     | (-0.873461, 2.320494)         |
+| a3     | (-2.521314, 0.017184)         |
+| a4     | (-0.782530, 0.788266)         |
+| a5     | (-0.873286, 2.269189)         |
+| a6     | (-2.519926, 0.017326)         |
+| a7     | (-0.777805, 0.777805)         |
+| a8     | (-0.850566, 2.343389)         |
+| a9     | (-2.508937, 0.036896)         |
+| a10    | (-0.777815, 0.777815)         |
+| a11    | (-0.850474, 2.343481)         |
+| a12    | (-2.507553, 0.037065)         |
 
 ### Observation Space
-
 | Variable | Range |
 | -----    | ----- |
-| vx      | (,) |
-| vy      | (,) |
-| vz      | (,) |
-| wx      | (,) |
-| wy      | (,) |
-| wz      | (,) |
-| roll    | (,) |
-| pitch   | (,) |
+| x      | (-inf, inf) |
+| y      | (-inf, inf) |
+| z      | (-inf, inf) |
+| roll    | (-pi, pi) |
+| pitch   | (-pi, pi) |
+| yaw   | (-pi, pi) |
 | q1      | (-0.785398, 0.785398) |
 | q2      | (-0.898845, 2.29511) |
 | q3      | (-2.7929, -0.254402) |
@@ -52,33 +81,32 @@ Box
 | q10     | (-0.785398, 0.785398) |
 | q11     | (-0.898845, 2.29511) |
 | q12     | (-2.7929, -0.248282) |
-| q1'     | (,) |
-| q2'     | (,) |
-| q3'     | (,) |
-| q4'     | (,) |
-| q5'     | (,) |
-| q6'     | (,) |
-| q7'     | (,) |
-| q8'     | (,) |
-| q9'     | (,) |
-| q10'    | (,) |
-| q11'    | (,) |
-| q12'    | (,) |
-| a1      | (,) |
-| a2      | (,) |
-| a3      | (,) |
-| a4      | (,) |
-| a5      | (,) |
-| a6      | (,) |
-| a7      | (,) |
-| a8      | (,) |
-| a9      | (,) |
-| a10     | (,) |
-| a11     | (,) |
-| a12     | (,) |
-| vx_ref  | (,) |
-| vy_ref  | (,) |
-| wz_ref  | (,) |
-| z_ref   | (,) |
+| q1'     | (-inf, inf) |
+| q2'     | (-inf, inf) |
+| q3'     | (-inf, inf) |
+| q4'     | (-inf, inf) |
+| q5'     | (-inf, inf) |
+| q6'     | (-inf, inf) |
+| q7'     | (-inf, inf) |
+| q8'     | (-inf, inf) |
+| q9'     | (-inf, inf) |
+| q10'    | (-inf, inf) |
+| q11'    | (-inf, inf) |
+| q12'    | (-inf, inf) |
+| a1     | (-0.788313, 0.782483)         |
+| a2     | (-0.873461, 2.320494)         |
+| a3     | (-2.521314, 0.017184)         |
+| a4     | (-0.782530, 0.788266)         |
+| a5     | (-0.873286, 2.269189)         |
+| a6     | (-2.519926, 0.017326)         |
+| a7     | (-0.777805, 0.777805)         |
+| a8     | (-0.850566, 2.343389)         |
+| a9     | (-2.508937, 0.036896)         |
+| a10    | (-0.777815, 0.777815)         |
+| a11    | (-0.850474, 2.343481)         |
+| a12    | (-2.507553, 0.037065)         |
+| x      | (-inf, inf) |
+| y      | (-inf, inf) |
+| z      | (-inf, inf) |
 
 https://gymnasium.farama.org/introduction/create_custom_env/#step-function
