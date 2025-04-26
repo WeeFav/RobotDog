@@ -39,6 +39,7 @@ def main():
 
     # Create data
     data = mujoco.MjData(model)
+    mujoco.mj_resetDataKeyframe(model, data, 1)
 
     # Launch passive viewer
     with mujoco.viewer.launch_passive(model, data) as viewer:
@@ -50,13 +51,9 @@ def main():
         linear_list = []
         angular_list = []
         rpy_list = []
-        
-        iteration = 0
-                
+                        
         try:
             while viewer.is_running():
-                print(iteration)
-                iteration += 1
                 t = time.time() - start
                 
                 # ctrl = trot_gait(t)
@@ -73,10 +70,13 @@ def main():
                 linear_vel = vel[3:]
                 angular_vel = vel[:3]
                 
+                # w x y z
                 quat = data.xquat[body_id]
-                rpy = R.from_quat([quat[1], quat[2], quat[3], quat[0]]).as_euler('zyx', degrees=True)
+                print(quat)
+                rpy = R.from_quat(quat, scalar_first=True).as_euler('xyz', degrees=True)
+                print(rpy)
                 
-                print(data.qpos[7:])
+                # print(data.qpos[7:])
                 # print(data.qvel[7:])
                 
                 # pos_list.append(robot_pos.copy())
