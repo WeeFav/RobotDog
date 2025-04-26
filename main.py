@@ -39,11 +39,14 @@ def main():
 
     # Create data
     data = mujoco.MjData(model)
-    mujoco.mj_resetDataKeyframe(model, data, 1)
-
+    mujoco.mj_resetDataKeyframe(model, data, 0)
+    body_id = model.body(name="body").id
+    quat = data.xquat[body_id]
+    
     # Launch passive viewer
     with mujoco.viewer.launch_passive(model, data) as viewer:
         print("Viewer launched. Close the window to stop.")
+        rpy = R.from_quat(quat, scalar_first=True).as_euler('xyz', degrees=True)
 
         start = time.time()
         
@@ -59,10 +62,12 @@ def main():
                 # ctrl = trot_gait(t)
                 # data.ctrl[:len(ctrl)] = ctrl
 
+                body_id = model.body(name="body").id
+                quat = data.xquat[body_id]
+                rpy = R.from_quat(quat, scalar_first=True).as_euler('xyz', degrees=True)
                 mujoco.mj_step(model, data)
                 viewer.sync()  # Update the visualization
                 
-                body_id = model.body(name="body").id
                 vel = np.zeros(6)
                 mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_BODY, body_id, vel, 0)
                 
@@ -71,9 +76,7 @@ def main():
                 angular_vel = vel[:3]
                 
                 # w x y z
-                quat = data.xquat[body_id]
                 print(quat)
-                rpy = R.from_quat(quat, scalar_first=True).as_euler('xyz', degrees=True)
                 print(rpy)
                 
                 # print(data.qpos[7:])

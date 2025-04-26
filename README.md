@@ -4,7 +4,7 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 
 - Import dog to MuJuCo - Done
 - Create custom gym environment - Not Done
-    - reward function
+    - double check if environment is working (reward seems wrong)
 - Train with stable baseline - Not Done
 
 ### Joints
