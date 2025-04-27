@@ -9,10 +9,11 @@ register(
 
 np.set_printoptions(suppress=True, formatter={'float_kind':'{:f}'.format})
 
-env = gym.make('RobotDog-v0', x_ref=3.0, y_ref=3.0)
+env = gym.make('RobotDog-v0', x_ref=3.0, y_ref=0.0)
 env.reset()
 while True:
-    random_action = env.action_space.sample()
-    observation, reward, terminated, truncated, info = env.step(random_action)
-    print("observation", observation)
+    # action = np.zeros(12)
+    action = env.action_space.sample()
+    observation, reward, terminated, truncated, info = env.step(action)
+    # print("observation", observation)
     env.render()

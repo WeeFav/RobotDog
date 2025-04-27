@@ -90,8 +90,8 @@ class RobotDogEnv(gym.Env):
             np.inf, np.inf, np.inf
         ])
 
-        self.action_space = gym.spaces.Box(low=action_space_low, high=action_space_high, dtype=np.float32)
-        self.observation_space = gym.spaces.Box(low=observation_space_low, high=observation_space_high, dtype=np.float32)
+        self.action_space = gym.spaces.Box(low=action_space_low, high=action_space_high, dtype=np.float64)
+        self.observation_space = gym.spaces.Box(low=observation_space_low, high=observation_space_high, dtype=np.float64)
             
         self.viewer = None
         
@@ -111,7 +111,7 @@ class RobotDogEnv(gym.Env):
         # Check if quaternion is valid
         norm = np.linalg.norm(quat)
         if norm < 1e-6:
-            print("Warning: Zero quaternion detected. Replacing with identity quaternion.")
+            # print("Warning: Zero quaternion detected. Replacing with identity quaternion.")
             quat = np.array([1, 0, 0, 0])  # MuJoCo uses wxyz order
             
         rpy = R.from_quat(quat, scalar_first=True).as_euler('xyz', degrees=True)
@@ -124,7 +124,7 @@ class RobotDogEnv(gym.Env):
         joint_pos = self.data.qpos[7:]
         
         # q1' ~ q12'
-        joint_vel = self.data.qvel[7:]
+        joint_vel = self.data.qvel[6:]
         
         # previous action a1 ~ a12
         prev_action = self.prev_action
@@ -147,7 +147,7 @@ class RobotDogEnv(gym.Env):
         # Action Rate Penalty
         R_action = -np.linalg.norm(prev_obs[30:42] - action, ord=2)
         
-        # Roll and Pitch Stabilization Penalty
+        # Stabilization Penalty
         R_stable = -(prev_obs[3]**2 + prev_obs[4]**2)
         
         # Facing Target Reward
@@ -157,11 +157,11 @@ class RobotDogEnv(gym.Env):
         goal_vector = goal_vector / (np.linalg.norm(goal_vector, ord=2) + 1e-8)
         R_facing = np.dot(facing_vector, goal_vector)
         
-        print("R_xyz", R_xyz)
-        print("R_pose", R_pose)
-        print("R_action", R_action)
-        print("R_stable", R_stable)
-        print("R_facing", R_facing)
+        # print("R_xyz", R_xyz)
+        # print("R_pose", R_pose)
+        # print("R_action", R_action)
+        # print("R_stable", R_stable)
+        # print("R_facing", R_facing)
         
         return R_xyz + R_pose + R_action + R_stable + R_facing
         
@@ -202,6 +202,8 @@ class RobotDogEnv(gym.Env):
         observation = self.get_obs()
         info = {}
         self.curr_step += 1
+        
+        self.render()
 
         return observation, reward, terminated, truncated, info
 

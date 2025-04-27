@@ -107,4 +107,13 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 | y      | (-inf, inf) |
 | z      | (-inf, inf) |
 
+### Reward
+| Reward | Range |
+| -----  | ----- |
+| Position Tracking Reward (R_xyz) | (1, 0)       |
+| Pose Similarity Penalty (R_pose) | (0, bounded) |
+| Action Rate Penalty (R_action)   | (0, bounded) |
+| Stabilization Penalty (R_stable) | (0, bounded) |
+| Facing Target Reward (R_facing)  | (-1, 1)      |
+
 https://gymnasium.farama.org/introduction/create_custom_env/#step-function
