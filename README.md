@@ -64,9 +64,9 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 | x      | (-inf, inf) |
 | y      | (-inf, inf) |
 | z      | (-inf, inf) |
-| roll    | (-pi, pi) |
-| pitch   | (-pi, pi) |
-| yaw   | (-pi, pi) |
+| roll    | (-180, 180) |
+| ptch   | (-180, 180) |
+| yaw   | (-180, 180) |
 | q1      | (-0.785398, 0.785398) |
 | q2      | (-0.898845, 2.29511) |
 | q3      | (-2.7929, -0.254402) |
@@ -110,10 +110,16 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 ### Reward
 | Reward | Range |
 | -----  | ----- |
-| Position Tracking Reward (R_xyz) | (1, 0)       |
+| Position Tracking Reward (R_xyz) | (0, 1)       |
 | Pose Similarity Penalty (R_pose) | (0, bounded) |
 | Action Rate Penalty (R_action)   | (0, bounded) |
 | Stabilization Penalty (R_stable) | (0, bounded) |
 | Facing Target Reward (R_facing)  | (-1, 1)      |
+
+sqrt(4(0.785398-0)^2 + 4(2.29511-1.04)^2 + 4(-0.254402-(-1.8))^2) = 4.28
+sqrt((max - min of action range)^2) = 8.75
+(180)^2 + (180)^2 = 64800
++1 / 2
+
 
 https://gymnasium.farama.org/introduction/create_custom_env/#step-function

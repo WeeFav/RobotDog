@@ -56,7 +56,7 @@ class RobotDogEnv(gym.Env):
         
         observation_space_low = np.array([
             -np.inf, -np.inf, -np.inf,
-            -np.pi, -np.pi, -np.pi,
+            -180, -180, -180,
             -0.785398, -0.898845, -2.7929,
             -0.785398, -0.898845, -2.7929,
             -0.785398, -0.898845, -2.7929,
@@ -74,7 +74,7 @@ class RobotDogEnv(gym.Env):
 
         observation_space_high = np.array([
             np.inf, np.inf, np.inf,
-            np.pi, np.pi, np.pi,
+            180, 180, 180,
             0.785398, 2.29511, -0.254402,
             0.785398, 2.24363, -0.255648,
             0.785398, 2.29511, -0.247067,
@@ -163,7 +163,19 @@ class RobotDogEnv(gym.Env):
         # print("R_stable", R_stable)
         # print("R_facing", R_facing)
         
-        return R_xyz + R_pose + R_action + R_stable + R_facing
+        R_xyz_normalized = R_xyz
+        R_pose_normalized = R_pose / 4.28
+        R_action_normalized = R_action / 8.75
+        R_stable_normalized = R_stable / 64800
+        R_facing_normalized = (R_facing + 1) / 2
+        
+        # print("R_xyz_normalized", R_xyz_normalized)
+        # print("R_pose_normalized", R_pose_normalized)
+        # print("R_action_normalized", R_action_normalized)
+        # print("R_stable_normalized", R_stable_normalized)
+        # print("R_facing_normalized", R_facing_normalized)
+        
+        return R_xyz_normalized + R_pose_normalized + 10 * R_action_normalized + R_stable_normalized + R_facing_normalized
         
     def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
         # We need the following line to seed self.np_random
