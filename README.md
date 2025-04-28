@@ -3,9 +3,20 @@
 Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 
 - Import dog to MuJuCo - Done
-- Create custom gym environment - Not Done
-    - double check if environment is working (reward seems wrong)
+- Create custom gym environment - Done
 - Train with stable baseline - Not Done
+    - robot dog won't move after a while
+
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+If not using GPU, remove +cu118 from
+```bash
+torch==2.3.0+cu118
+torchvision==0.18.0+cu118
+```
 
 ### Joints
 
@@ -116,10 +127,15 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 | Stabilization Penalty (R_stable) | (0, bounded) |
 | Facing Target Reward (R_facing)  | (-1, 1)      |
 
-sqrt(4(0.785398-0)^2 + 4(2.29511-1.04)^2 + 4(-0.254402-(-1.8))^2) = 4.28
-sqrt((max - min of action range)^2) = 8.75
-(180)^2 + (180)^2 = 64800
-+1 / 2
+Normalization Calculation:
+
+R_pose = sqrt(4(0.785398-0)^2 + 4(2.29511-1.04)^2 + 4(-0.254402-(-1.8))^2) = 4.28
+
+R_action = sqrt((max - min of action range)^2) = 8.75
+
+R_stable = (180)^2 + (180)^2 = 64800
+
+R_facing = +1 / 2
 
 
 https://gymnasium.farama.org/introduction/create_custom_env/#step-function
