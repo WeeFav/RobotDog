@@ -137,5 +137,9 @@ R_stable = (180)^2 + (180)^2 = 64800
 
 R_facing = +1 / 2
 
+### Experiments
+1. Robot move too much too quickly, so scaled R_action by 10. Result was that the robot learned to not move
+2. Scaled R_xyz by 10 and R_action by 1. Robot still not moving
+3. Change raw_th and pitch_th from 10 to 45. scale R_action 1/3.
 
 https://gymnasium.farama.org/introduction/create_custom_env/#step-function

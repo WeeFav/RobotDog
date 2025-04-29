@@ -6,6 +6,7 @@ import os
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 from typing import Optional
+import time
 
 class RobotDogEnv(gym.Env):
     def __init__(self, x_ref, y_ref, z_ref=0.0):
@@ -13,8 +14,8 @@ class RobotDogEnv(gym.Env):
         self.y_ref = y_ref
         self.z_ref = z_ref
         
-        self.roll_th = 10
-        self.pitch_th = 10
+        self.roll_th = 45
+        self.pitch_th = 45
         self.max_steps = 10000
         self.curr_step = 0
         
@@ -169,13 +170,13 @@ class RobotDogEnv(gym.Env):
         R_stable_normalized = R_stable / 64800
         R_facing_normalized = (R_facing + 1) / 2
         
-        # print("R_xyz_normalized", R_xyz_normalized)
-        # print("R_pose_normalized", R_pose_normalized)
-        # print("R_action_normalized", R_action_normalized)
-        # print("R_stable_normalized", R_stable_normalized)
-        # print("R_facing_normalized", R_facing_normalized)
+        print("R_xyz_normalized", R_xyz_normalized * 10)
+        print("R_pose_normalized", R_pose_normalized)
+        print("R_action_normalized", R_action_normalized / 3)
+        print("R_stable_normalized", R_stable_normalized)
+        print("R_facing_normalized", R_facing_normalized)
         
-        return R_xyz_normalized + R_pose_normalized + 10 * R_action_normalized + R_stable_normalized + R_facing_normalized
+        return 10 * R_xyz_normalized + R_pose_normalized + R_action_normalized / 3 + R_stable_normalized + R_facing_normalized
         
     def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
         # We need the following line to seed self.np_random
@@ -226,6 +227,7 @@ class RobotDogEnv(gym.Env):
         
         # Sync and render the viewer
         self.viewer.sync()
+        time.sleep(0.01)
 
     def close(self):
         if self.viewer is not None:
