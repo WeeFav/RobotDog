@@ -114,9 +114,12 @@ torchvision==0.18.0+cu118
 | a10    | (-0.785398, 0.785398)         |
 | a11    | (-1.938845, 1.25511)          |
 | a12    | (-0.9929, 1.551718)           |
-| x      | (-inf, inf) |
-| y      | (-inf, inf) |
-| z      | (-inf, inf) |
+| x_ref      | (-inf, inf) |
+| y_ref      | (-inf, inf) |
+| z_ref      | (-inf, inf) |
+| x_prev      | (-inf, inf) |
+| y_prev      | (-inf, inf) |
+| z_prev      | (-inf, inf) |
 
 ### Reward
 | Reward | Range |
@@ -126,6 +129,15 @@ torchvision==0.18.0+cu118
 | Action Rate Penalty (R_action)   | (0, bounded) |
 | Stabilization Penalty (R_stable) | (0, bounded) |
 | Facing Target Reward (R_facing)  | (-1, 1)      |
+| Right Direction Reward (RightDirectionReward)| (0, inf)|
+| New Record Reward (newRecord)  | (0, inf)       |
+| Roll Penalty (rollPenalty)  | (-inf, 0)         |
+| Pitch Penalty (pitchPenalty)  | (-inf, 0)       |
+| Yaw Penalty (yawPenalty)  | (-inf, 0)           |
+| Out of Line Penalty (OutofLinePenalty)  | (-inf, 0) |
+
+Currently using Right Direction Reward, New Record Reward, Roll Penalty, Pitch Penalty, and Yaw Penalty
+
 
 Normalization Calculation:
 
