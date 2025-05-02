@@ -163,7 +163,8 @@ class RobotDogEnv(gym.Env):
 
     def get_reward(self, prev_obs, action, NewRecordBool):
 
-        ## NOTE that in this part prev_obs is refering to the most recent observation space.
+        ## NOTE that in this part prev_obs is refering to the most recent observation space. Also to make the robot
+        ## multi directional we will need to alter many of the rewards and penalties
 
         RightDirectionReward = 0
 
@@ -188,7 +189,7 @@ class RobotDogEnv(gym.Env):
 
             RightDirectionReward += (self.maxDistance + 10) - (self.maxDistance - abs(prev_obs[1]))
             RightDirectionBool = True
-
+##############################################################################################
         OutOfLinePenalty = 0
 
         if prev_obs[42] == 0:
@@ -201,7 +202,7 @@ class RobotDogEnv(gym.Env):
         if NewRecordBool and RightDirectionBool:
             newRecord = 10*RightDirectionReward ##Needs to be changed for omni directional
 
-#############################################################################################
+##############################################################################################
 
         rollPenalty = 0
         pitchPenalty = 0
@@ -217,6 +218,7 @@ class RobotDogEnv(gym.Env):
             yawPenalty = -(RightDirectionReward * .7)
 
         return RightDirectionReward + newRecord + yawPenalty + rollPenalty + pitchPenalty
+        ##Not using Out of Line.
 
 
     def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
