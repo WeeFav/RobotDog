@@ -136,7 +136,7 @@ torchvision==0.18.0+cu118
 | Yaw Penalty (yawPenalty)  | (-inf, 0)           |
 | Out of Line Penalty (OutofLinePenalty)  | (-inf, 0) |
 
-Currently using Right Direction Reward, New Record Reward, Roll Penalty, Pitch Penalty, Yaw Penalty, and Out of Line Penalty
+Currently using Right Direction Reward, New Record Reward, Roll Penalty, Pitch Penalty, and Yaw Penalty
 
 
 Normalization Calculation:
