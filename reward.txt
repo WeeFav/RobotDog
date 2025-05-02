@@ -1,0 +1,126 @@
+Code for all the rewards. First are the rewards that are not in the final model.
+
+# Position Tracking Reward
+
+        R_xyz = np.exp(-np.linalg.norm(prev_obs[0:2] - np.array([self.x_ref, self.y_ref]), ord=2))
+________________________________________________________________________________________________________________________
+# Pose Similarity Penalty
+
+        R_pose = -np.linalg.norm(prev_obs[6:18] - self.q_homing, ord=2)
+________________________________________________________________________________________________________________________
+# Action Rate Penalty
+
+        R_action = -np.linalg.norm(prev_obs[30:42] - action, ord=2)
+________________________________________________________________________________________________________________________
+# Stabilization Penalty
+
+        R_stable = -(prev_obs[3] ** 2 + prev_obs[4] ** 2)
+________________________________________________________________________________________________________________________
+# Facing Target Reward
+        yaw = np.deg2rad(prev_obs[5])
+        facing_vector = np.array([np.cos(yaw), np.sin(yaw)])
+        goal_vector = np.array([self.x_ref - prev_obs[0], self.y_ref - prev_obs[1]])
+        goal_vector = goal_vector / (np.linalg.norm(goal_vector, ord=2) + 1e-8)
+        R_facing = np.dot(facing_vector, goal_vector)
+________________________________________________________________________________________________________________________
+# Standing Still Reward
+
+        R_still = (np.linalg.norm(prev_obs[30:42] - action, ord=2))**2
+________________________________________________________________________________________________________________________
+# Moving Distance Reward
+
+        MovingDistanceReward = 0
+        if prev_obs[42] > 0 and (prev_obs[45]) > 0:
+            MovingDistanceReward += abs(prev_obs[45])
+            print("Actually Positive --2.1")
+        elif prev_obs[42] < 0 and (prev_obs[45]) < 0:
+            MovingDistanceReward += abs(prev_obs[45])
+
+        if prev_obs[43] > 0 and (prev_obs[46]) > 0:
+            MovingDistanceReward += prev_obs[46]
+        elif prev_obs[43] < 0 and (prev_obs[46]) < 0:
+            MovingDistanceReward += prev_obs[46]
+
+________________________________________________________________________________________________________________________
+# Yaw Penalty
+
+        YawPenalty = -abs(yaw)
+
+________________________________________________________________________________________________________________________
+## Short Reward (Takes in booleans "Short" and "RightDirectionBool" as input)
+## RightDirectionBool is referenced in the Right Direction Reward
+
+        ShortPenalty = 0
+        if Short and RightDirectionBool:
+            ShortPenalty = -RightDirectionReward
+
+________________________________________________________________________________________________________________________
+## Good Result Reward (Takes in booleans "GoodResult" and "RightDirectionBool" as input)
+
+        GoodResultReward = 0
+        if GoodResult and RightDirectionBool:
+            GoodResultReward += 2*RightDirectionReward
+
+________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________
+Now these are the Rewards/Penalties that are used
+
+## Roll, Pitch, and Yaw Penalty (All the same code minus the different variables)
+
+        rollPenalty = 0
+        pitchPenalty = 0
+        yawPenalty = 0
+
+        if abs(prev_obs[4]) > (.5 * self.roll_th):
+            rollPenalty = -(RightDirectionReward * .7)
+
+        if abs(prev_obs[5]) > (.5 * self.pitch_th):
+            pitchPenalty = -(RightDirectionReward * .7)
+
+        if abs(prev_obs[6]) > (.5 * self.yaw_th):
+            yawPenalty = -(RightDirectionReward * .7)
+
+________________________________________________________________________________________________________________________
+## Right Direction Reward
+
+        RightDirectionBool = False
+        if prev_obs[42] > 0 and (prev_obs[0] - prev_obs[45]) > 0 and (not(
+                -.0002 < (prev_obs[0] - prev_obs[45]) < .0002)):
+
+            RightDirectionReward += (self.maxDistance + 10) - (self.maxDistance - abs(prev_obs[0]))
+            RightDirectionBool = True
+        elif prev_obs[42] < 0 and (prev_obs[0] - prev_obs[45]) < 0:
+            RightDirectionReward += (self.maxDistance + 10) - (self.maxDistance - abs(prev_obs[0]))
+            RightDirectionBool = True
+
+        if prev_obs[43] > 0 and (prev_obs[1] - prev_obs[46]) > 0 and (not(
+                -.0002 < (prev_obs[1] - prev_obs[46]) < .0002)):
+
+            RightDirectionReward += (self.maxDistance + 10) - (self.maxDistance - abs(prev_obs[1]))   Would use this is omni directional
+            RightDirectionBool = True
+        elif prev_obs[43] < 0 and (prev_obs[1] - prev_obs[46]) < 0 and (not(
+                -.0002 < (prev_obs[1] - prev_obs[46]) < .0002)):
+
+            RightDirectionReward += (self.maxDistance + 10) - (self.maxDistance - abs(prev_obs[1]))   Would use this is omni directional
+            RightDirectionBool = True
+
+________________________________________________________________________________________________________________________
+## Out of Line Penalty
+
+        OutOfLinePenalty = 0
+
+        if prev_obs[42] == 0:
+            OutOfLinePenalty += -(abs(prev_obs[0] - prev_obs[45]) * RightDirectionReward)
+
+        if prev_obs[43] == 0:
+            OutOfLinePenalty += -(abs(prev_obs[1] - prev_obs[46]) * RightDirectionReward)
+
+________________________________________________________________________________________________________________________
+## New Record Reward (Depends on the input of RightDirectionBoolean and NewRecordBool)
+
+        newRecord = 0
+        if NewRecordBool and RightDirectionBool:
+            newRecord = 10*RightDirectionReward
+
+________________________________________________________________________________________________________________________

@@ -1,18 +1,24 @@
 import gymnasium as gym
-import numpy as np
-from gymnasium.envs.registration import register
+from stable_baselines3 import PPO
+import os
 
-register(
-    id='RobotDog-v0',
-    entry_point='custom_env:RobotDogEnv',
-)
+import RobotDog.custom_env
 
-np.set_printoptions(suppress=True, formatter={'float_kind':'{:f}'.format})
+models_dir = "models/PPO7"
+logdir = "logs"
 
-env = gym.make('RobotDog-v0', x_ref=3.0, y_ref=3.0)
+if not os.path.exists(models_dir):
+    os.makedirs(models_dir)
+
+if not os.path.exists(logdir):
+    os.makedirs(logdir)
+env = RobotDog.custom_env.RobotDogEnv(7,0)
 env.reset()
-while True:
-    random_action = env.action_space.sample()
-    observation, reward, terminated, truncated, info = env.step(random_action)
-    print("observation", observation)
-    env.render()
+
+model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=logdir)
+
+TIMESTEPS = 20000
+iters = 0
+for i in range(30):
+    model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name="PPO7")
+    model.save(f"{models_dir}/{TIMESTEPS*i}")
