@@ -3,9 +3,20 @@
 Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 
 - Import dog to MuJuCo - Done
-- Create custom gym environment - Not Done
-    - double check if environment is working (reward seems wrong)
+- Create custom gym environment - Done
 - Train with stable baseline - Not Done
+    - robot dog won't move after a while
+
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+If not using GPU, remove +cu118 from
+```bash
+torch==2.3.0+cu118
+torchvision==0.18.0+cu118
+```
 
 ### Joints
 
@@ -64,9 +75,9 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 | x      | (-inf, inf) |
 | y      | (-inf, inf) |
 | z      | (-inf, inf) |
-| roll    | (-pi, pi) |
-| pitch   | (-pi, pi) |
-| yaw   | (-pi, pi) |
+| roll    | (-180, 180) |
+| ptch   | (-180, 180) |
+| yaw   | (-180, 180) |
 | q1      | (-0.785398, 0.785398) |
 | q2      | (-0.898845, 2.29511) |
 | q3      | (-2.7929, -0.254402) |
@@ -106,5 +117,29 @@ Insipration: https://github.com/Argo-Robot/quadrupeds_locomotion
 | x      | (-inf, inf) |
 | y      | (-inf, inf) |
 | z      | (-inf, inf) |
+
+### Reward
+| Reward | Range |
+| -----  | ----- |
+| Position Tracking Reward (R_xyz) | (0, 1)       |
+| Pose Similarity Penalty (R_pose) | (0, bounded) |
+| Action Rate Penalty (R_action)   | (0, bounded) |
+| Stabilization Penalty (R_stable) | (0, bounded) |
+| Facing Target Reward (R_facing)  | (-1, 1)      |
+
+Normalization Calculation:
+
+R_pose = sqrt(4(0.785398-0)^2 + 4(2.29511-1.04)^2 + 4(-0.254402-(-1.8))^2) = 4.28
+
+R_action = sqrt((max - min of action range)^2) = 8.75
+
+R_stable = (180)^2 + (180)^2 = 64800
+
+R_facing = +1 / 2
+
+### Experiments
+1. Robot move too much too quickly, so scaled R_action by 10. Result was that the robot learned to not move
+2. Scaled R_xyz by 10 and R_action by 1. Robot still not moving
+3. Change raw_th and pitch_th from 10 to 45. scale R_action 1/3.
 
 https://gymnasium.farama.org/introduction/create_custom_env/#step-function
